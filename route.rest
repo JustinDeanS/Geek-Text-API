@@ -1,0 +1,19 @@
+GET http://localhost:3000/shoppingCart
+
+###
+
+GET http://localhost:3000/shoppingCart/65187f4fbe94d77b7d2b1eca
+//get bookId by passing userId
+
+###
+
+POST http://localhost:3000/shoppingCart
+Content-Type: application/json
+
+{
+    "bookId": "556",
+    "price": "50$"
+}
+
+###
+DELETE http://localhost:3000/shoppingCart/651b847f8c61b2392478ecad
