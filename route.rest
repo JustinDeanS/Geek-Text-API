@@ -1,9 +1,10 @@
-GET http://localhost:3000/shoppingCart
+GET http://localhost:3000/shoppingCart/subtotal
+//Retrieve the subtotal
 
 ###
 
-GET http://localhost:3000/shoppingCart/651b8ac1ed3230b7a39361cf
-//get bookId by passing userId
+GET http://localhost:3000/shoppingCart/retrieve
+//Retrieve the list of books in the shopping cart
 
 ###
 
@@ -16,4 +17,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/shoppingCart/651b7f69b85304b9644f379c
+DELETE http://localhost:3000/shoppingCart/651b847f8c61b2392478ecaf

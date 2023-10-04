@@ -3,22 +3,22 @@ const router = express.Router()
 const shoppingCart = require('../models/shoppingCart')
 
 // GET all Books
-// router.get('/', async (req, res) => {
-//     try {
+router.get('/retrieve', async (req, res) => {
+    try {
 
-//         const shopping = await shoppingCart.find()
-//         res.json(shopping)
+        const shopping = await shoppingCart.find()
+        res.json(shopping)
 
-//     } catch (err) {
+    } catch (err) {
 
-//         res.status(500).json({ message: err.message })
+        res.status(500).json({ message: err.message })
 
-//     }
+    }
 
-// })
+})
 
-// Get the subtotal
-router.get('/', async (req, res) => {
+//Get the subtotal
+router.get('/subtotal', async (req, res) => {
     try {
         const shopping = await shoppingCart.find();
         
@@ -30,7 +30,6 @@ router.get('/', async (req, res) => {
 
         // Add the total price to the response JSON
         const response = {
-            shopping,
             totalPrice
         };
 
