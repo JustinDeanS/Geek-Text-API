@@ -3,19 +3,42 @@ const router = express.Router()
 const shoppingCart = require('../models/shoppingCart')
 
 // GET all Books
+// router.get('/', async (req, res) => {
+//     try {
+
+//         const shopping = await shoppingCart.find()
+//         res.json(shopping)
+
+//     } catch (err) {
+
+//         res.status(500).json({ message: err.message })
+
+//     }
+
+// })
+
+// Get the subtotal
 router.get('/', async (req, res) => {
     try {
+        const shopping = await shoppingCart.find();
+        
+        // Calculate the total price
+        let totalPrice = 0;
+        for (const item of shopping) {
+            totalPrice += item.price;
+        }
 
-        const shopping = await shoppingCart.find()
-        res.json(shopping)
+        // Add the total price to the response JSON
+        const response = {
+            shopping,
+            totalPrice
+        };
 
+        res.json(response);
     } catch (err) {
-
-        res.status(500).json({ message: err.message })
-
+        res.status(500).json({ message: err.message });
     }
-
-})
+});
 
 // Get one Book
 router.get('/:id', getCart, (req, res) => {
@@ -52,7 +75,11 @@ router.delete('/:id', getCart, async (req, res) => {
     
     try{
 
-        await res.cart.deleteOne()
+        //await res.cart.deleteOne()
+        const cartItem = res.cart;
+
+        // Remove the item from the cart
+        await cartItem.deleteOne();
         res.json({ message: 'Book removed from cart'})
 
     } catch(err){
