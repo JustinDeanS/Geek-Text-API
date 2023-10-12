@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const app = express()
 const BookModel = require('./models/BookModel')
@@ -6,7 +7,10 @@ const bookRoutes = require('./routes/bookRoutes');
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-mongoose.connect('mongodb+srv://admin:123@bookstore.mqkpo8w.mongodb.net/BookStore?retryWrites=true&w=majority')
+
+const mongoURI = process.env.MONGODB_URI
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     app.use(bookRoutes);    // Use routes from bookRoutes
 
