@@ -1,20 +1,30 @@
-GET http://localhost:3000/shoppingCart/subtotal
+GET http://localhost:3000/shoppingCart/subtotal/1232132
 //Retrieve the subtotal
 
 ###
 
-GET http://localhost:3000/shoppingCart/retrieve
+GET http://localhost:3000/shoppingCart/retrieve/1000
 //Retrieve the list of books in the shopping cart
 
 ###
 
-POST http://localhost:3000/shoppingCart
+POST http://localhost:3000/shoppingCart/Add/1000/1234
 Content-Type: application/json
 
 {
-    "bookId": "556",
-    "price": 50
+    "price": 5000
 }
 
 ###
-DELETE http://localhost:3000/shoppingCart/651b847f8c61b2392478ecaf
+DELETE http://localhost:3000/shoppingCart/Delete/1000/210
+
+###
+
+//adding users (Temporary)
+POST http://localhost:3000/shoppingCart/userId
+Content-Type: application/json
+
+{
+    "userId": "1000",
+    "bookId": ""
+}

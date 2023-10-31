@@ -1,13 +1,35 @@
 const express = require('express')
 const router = express.Router()
-const shoppingCart = require('../models/shoppingCart')
+const ShoppingCart = require('../models/shoppingCart')
+const User = require('../models/userModel')
+const mongoose = require('mongoose')
 
-// GET all Books
-router.get('/retrieve', async (req, res) => {
+// GET all Books in the user's shopping cart
+router.get('/retrieve/:userId', async (req, res) => {
     try {
 
-        const shopping = await shoppingCart.find()
-        res.json(shopping)
+        const userId = req.params.userId;
+
+        const newUser = await User.findOne({ userId: req.params.userId });
+        
+        if (!newUser) {
+            
+            return res.status(404).json({ message: 'User not found' });
+
+        }
+
+        let newShoppingCart = await ShoppingCart.findOne({ user: userId });
+
+        if (!newShoppingCart) {
+             
+            return res.status(404).json({ message: 'Shopping Cart not found' });
+
+        }
+        else{
+
+            res.status(201).json(newShoppingCart);
+
+        }
 
     } catch (err) {
 
@@ -18,68 +40,106 @@ router.get('/retrieve', async (req, res) => {
 })
 
 //Get the subtotal
-router.get('/subtotal', async (req, res) => {
+router.get('/subtotal/:userId', async (req, res) => {
     try {
-        const shopping = await shoppingCart.find();
-        
-        // Calculate the total price
-        let totalPrice = 0;
-        for (const item of shopping) {
-            totalPrice += item.price;
-        }
 
-        // Add the total price to the response JSON
+        const userId = req.params.userId;
+        const shoppingCart = await ShoppingCart.findOne({ user: userId });
+
+    if (!shoppingCart) {
+      console.log('Shopping cart not found');
+      return;
+    }
+
+    const subtotal = shoppingCart.books.reduce((total, books) => total + books.price, 0);
+
         const response = {
-            totalPrice
+            subtotal
         };
 
         res.json(response);
-    } catch (err) {
+
+    }
+    catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// Get one Book
-router.get('/:id', getCart, (req, res) => {
-    res.send(res.cart)
-
-})
-
-// CREATE one Book
-router.post('/', async (req, res) => {
-
-    const cart = new shoppingCart ({
-
-        bookId: req.body.bookId,
-        price: req.body.price
-
-    })
+// Add a Book to the shopping cart
+router.post('/Add/:userId/:bookId', async (req, res) => {
 
     try {
 
-        const newCart = await cart.save()
-        res.status(201).json(newCart)
+        const userId = req.params.userId;
+        const bookId = req.params.bookId;
 
-    } catch (err){
+        const { price } = req.body;
 
-        res.status(400).json({message: err.message})
+        const newUser = await User.findOne({ userId: req.params.userId });
+        if (!newUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-    }
+        let newShoppingCart = await ShoppingCart.findOne({ user: userId });
 
-})
+        if (!newShoppingCart) {
+             newShoppingCart = new ShoppingCart({ 
+                
+                user: userId, 
+                books: [{bookId, price: price }],
 
+            });
+        
+        await newShoppingCart.save();
+        }
+        else{
+
+            newShoppingCart.books.push({  bookId, price: price });
+            await newShoppingCart.save();
+
+        }
+    
+        res.status(201).json(newShoppingCart);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+
+});
 
 // Delete one Book
-router.delete('/:id', getCart, async (req, res) => {
+router.delete('/Delete/:userId/:bookId', async (req, res) => {
     
     try{
 
-        //await res.cart.deleteOne()
-        const cartItem = res.cart;
+        const userId = req.params.userId;
+        const bookId = req.params.bookId;
 
-        // Remove the item from the cart
-        await cartItem.deleteOne();
-        res.json({ message: 'Book removed from cart'})
+        const newUser = await User.findOne({ userId: req.params.userId });
+        
+        if (!newUser) {
+            
+            return res.status(404).json({ message: 'User not found' });
+
+        }
+
+        let newShoppingCart = await ShoppingCart.findOne({ user: userId });
+
+        if (!newShoppingCart) {
+             
+            return res.status(404).json({ message: 'Shopping Cart not found' });
+
+        }
+        else{
+
+            const updatedCart = await ShoppingCart.findOneAndUpdate(
+                { user: userId },
+                { $pull: { books: { bookId: bookId } } },
+                { new: true }
+              ).exec();
+            
+            res.status(201).json(updatedCart);
+
+        }
 
     } catch(err){
 
@@ -89,23 +149,22 @@ router.delete('/:id', getCart, async (req, res) => {
 
 })
 
-//middleware
-async function getCart(req, res, next){
-
+//remove later
+//Route to create a user with a specific user ID
+router.post('/:userId', async (req, res) => {
     try {
-
-        cart = await shoppingCart.findById(req.params.id)
-        if(cart == null){
-            return res.status(404).json({ message: 'Cannot find Book'})
-        }
-
-    } catch (err){
-        return res.status(500).json({ message: err.message })
+      
+      const { userId, bookId, shoppingCart} = req.body;
+      // Create a new user
+      const newUser = new User({userId, bookId, shoppingCart});
+  
+      // Save the user to the database
+      await newUser.save();
+  
+      res.status(201).json(newUser);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
-
-    res.cart = cart
-    next()
-
-}
+  });
 
 module.exports = router
