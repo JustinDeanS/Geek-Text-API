@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const authorSchema = new mongoose.Schema({
   // authorID: {
-  //   type: String, // You can specify the type you prefer
+  //   type: String,
   //   required: true,
-  //   unique: true, // Manually ensure uniqueness on the client side
+  //   unique: true,
   // },
   firstName: {
     type: String,

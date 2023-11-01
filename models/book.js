@@ -11,8 +11,8 @@ const bookSchema = new mongoose.Schema({
     required: true,
   },
   author: {
-    type: String, // Store authorID as a string
-    required: true, // Ensure that client provides a valid authorID
+    type: String,
+    required: true,
   },
   description: String,
   price: {
