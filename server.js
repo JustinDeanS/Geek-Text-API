@@ -22,6 +22,6 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 
-}).catch((error) => {
+}).catch((error) => {g
     console.log(error)
 })

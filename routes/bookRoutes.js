@@ -63,6 +63,22 @@ router.get('/books', async(req,res) => {
         }
 })
 
+router.get('/books/BestSellers/', async (req, res) => {
+    try {
+        const bestSellers = await BookModel
+            .find()
+            .sort({ copies: -1 }) // Sort by copiesSold in descending order (highest first)
+            .limit(10); // Limit the result to the top 10
+
+        if (!bestSellers || bestSellers.length === 0) {
+            return res.status(404).json({ Error: 'Cannot find any best-selling books.' });
+        }
+
+        res.status(200).json(bestSellers);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 router.get('/books/Publishers/:publisher', async(req,res) =>{
     try{

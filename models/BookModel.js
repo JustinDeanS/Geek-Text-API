@@ -24,9 +24,14 @@ rating:{
 publisher:{
     type: String,
     required: [true, "Please enter a publisher for the book"]
-}
-
 },
+copies:{
+    type: Number,
+    default: 1
+    
+}
+},
+
 {
     timestamps: true
 }
