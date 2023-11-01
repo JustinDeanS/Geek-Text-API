@@ -11,8 +11,8 @@ const bookSchema = new mongoose.Schema({
     required: true,
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Author", //references to the author.js model
+    type: String, // Store authorID as a string
+    required: true, // Ensure that client provides a valid authorID
   },
   description: String,
   price: {
