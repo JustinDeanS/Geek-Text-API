@@ -23,7 +23,7 @@ const shoppingCartSchema = new mongoose.Schema({
     ]
 
 })
-
+// comment
 const ShoppingCart = mongoose.model('shoppingCart', shoppingCartSchema)
 
 module.exports = ShoppingCart;
