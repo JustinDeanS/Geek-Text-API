@@ -151,20 +151,20 @@ router.delete('/Delete/:userId/:bookId', async (req, res) => {
 
 //remove later
 //Route to create a user with a specific user ID
-router.post('/:userId', async (req, res) => {
-    try {
+// router.post('/:userId', async (req, res) => {
+//     try {
       
-      const { userId, bookId, shoppingCart} = req.body;
-      // Create a new user
-      const newUser = new User({userId, bookId, shoppingCart});
+//       const { userId, bookId, shoppingCart} = req.body;
+//       // Create a new user
+//       const newUser = new User({userId, bookId, shoppingCart});
   
-      // Save the user to the database
-      await newUser.save();
+//       // Save the user to the database
+//       await newUser.save();
   
-      res.status(201).json(newUser);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
+//       res.status(201).json(newUser);
+//     } catch (err) {
+//       res.status(500).json({ message: err.message });
+//     }
+//   });
 
 module.exports = router
