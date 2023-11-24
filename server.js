@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const booksRouter = require("./routes/book.js");
 const authorsRouter = require("./routes/author.js");
+const ratingAndCommentRouter = require("./routes/ratingAndCommentingRoutes.js");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use("/api/", booksRouter);
 app.use("/api/", authorsRouter);
+app.use("/api/", ratingAndCommentRouter);
 
 //health check
 app.get("/", function (req, res) {
